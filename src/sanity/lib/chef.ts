@@ -1,8 +1,24 @@
-import { client } from "@/sanity/lib/client";
+// import { client } from "@/sanity/lib/client";
 
-export const fetchChefs = async () => {
-  const chefs = await client.fetch(`
-    *[_type == "chef"]{
+import { defineQuery } from "next-sanity";
+
+// export const fetchChefs = async () => {
+//   const chefs = await client.fetch(`
+//     *[_type == "chef"]{
+//       name,
+//       position,
+//       experience,
+//       specialty,
+//       "imageUrl": image.asset->url,
+//       description,
+//       available
+//     }
+//   `);
+//   return chefs;
+// };
+
+export const fetchChefs=defineQuery(
+  `    *[_type == "chef"]{
       name,
       position,
       experience,
@@ -10,7 +26,5 @@ export const fetchChefs = async () => {
       "imageUrl": image.asset->url,
       description,
       available
-    }
-  `);
-  return chefs;
-};
+    }`
+)

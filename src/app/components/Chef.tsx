@@ -1,6 +1,9 @@
 
 // import React from 'react'
 
+import { fetchChefs } from "@/sanity/lib/chef";
+import { sanityfetch } from "@/sanity/lib/fetch";
+
 // function Chef() {
 //   return (
 //     <div><div className="bg-black text-white py-12">
@@ -124,7 +127,7 @@
 
 // export default Chef;
 
-import { client } from "@/sanity/lib/client";
+
 
 interface Chef {
   name: string;
@@ -136,48 +139,7 @@ interface Chef {
   available: boolean;
 }
 
-const Chef = async () => {
-  try {
-    // Fetch data directly in the server component
-    const chefs: Chef[] = await client.fetch<Chef[]>(`
-      *[_type == "chef"]{
-        name,
-        position,
-        experience,
-        specialty,
-        "imageUrl": image.asset->url,
-        description,
-        available
-      }
-    `);
-
-    console.log('Fetched Chefs:', chefs);
-
-    if (!chefs || chefs.length === 0) {
-      return <div>No chefs found!</div>;
-    }
-
-    return (
-      <div className="chef-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
-        {chefs.map((chef) => (
-          <div key={chef.name} className="chef-card p-4 border rounded shadow-md">
-            <img src={chef.imageUrl} alt={chef.name} className="w-full h-48 object-cover rounded" />
-            <h2 className="text-xl font-bold mt-2">{chef.name}</h2>
-            <p><strong>Position:</strong> {chef.position}</p>
-            <p><strong>Experience:</strong> {chef.experience} years</p>
-            <p><strong>Specialty:</strong> {chef.specialty}</p>
-            <p><strong>Description:</strong> {chef.description}</p>
-            <p className={chef.available ? 'text-green-500' : 'text-red-500'}>
-              <strong>Status:</strong> {chef.available ? 'Active' : 'Inactive'}
-            </p>
-          </div>
-        ))}
-      </div>
-    );
-  } catch (error) {
-    console.error('Error fetching chefs:', error);
-    return <div>Error loading chefs data!</div>;
-  }
-};
-
-export default Chef;
+export default async function Chef(){
+  const Chefs:Chef[]=await sanityfetch({query: fetchChefs});
+  
+}

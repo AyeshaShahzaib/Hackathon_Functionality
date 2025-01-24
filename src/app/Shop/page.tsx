@@ -1,11 +1,12 @@
+import FoodFetcher from "../components/FoodFetcher";
 import OurShop from "../components/OurShop";
-import ShopList from "../components/ShopList";
+
 
 export default function Shop(){
     return(
         <div>
            <OurShop/> 
-           <ShopList/>
+           <FoodFetcher></FoodFetcher>
         </div>
     )
 }

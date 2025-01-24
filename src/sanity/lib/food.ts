@@ -1,17 +1,18 @@
-import { client } from "@/sanity/lib/client";
 
-export const fetchFoods = async () => {
-  const foods = await client.fetch(`
-    *[_type == "food"]{
-      name,
+
+import { defineQuery } from "next-sanity";
+
+export const  fetchFoods=defineQuery(
+    `
+     *[_type == "food"]{
+       name,
       category,
-      price,
+       price,
       originalPrice,
-      tags,
-      "imageUrl": image.asset->url,
-      description,
+       tags,
+       "imageUrl": image.asset->url,
+       description,
       available
-    }
-  `);
-  return foods;
-};
+     }
+  `
+)

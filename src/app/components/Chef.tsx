@@ -3,6 +3,7 @@
 
 import { fetchChefs } from "@/sanity/lib/chef";
 import { sanityfetch } from "@/sanity/lib/fetch";
+import Link from "next/link";
 
 // function Chef() {
 //   return (
@@ -129,6 +130,55 @@ import { sanityfetch } from "@/sanity/lib/fetch";
 
 
 
+// interface Chef {
+//   name: string;
+//   position: string;
+//   experience: string;
+//   specialty: string;
+//   imageUrl: string;
+//   description: string;
+//   available: boolean;
+// }
+
+// export default async function Chef(){
+//   const Chefs:Chef[]=await sanityfetch({query: fetchChefs});
+//   return(
+//     <div>
+//           <div className="bg-black text-white py-12">
+//             <div className="container mx-auto text-center">
+//               <h2 className="text-3xl font-bold mb-8">
+//                  <span className="text-yellow-500">Meet</span> Our Chef
+//               </h2>
+//              <div className="flex flex-wrap justify-center gap-6">
+//                 {Chefs.map((chef, index) => (
+//                   <div
+//                     key={index}
+//                     className="bg-gray-800 rounded-lg p-6 max-w-xs"
+//                   >
+//                     <img
+//                       src={chef.imageUrl || 'path/to/default-image.jpg'}
+//                       alt={chef.name}
+//                       className="rounded-lg mb-4 w-full"
+//                     />
+//                     <h3 className="text-xl font-semibold mb-1">{chef.name}</h3>
+//                     <p className="text-gray-400">{chef.position}</p>
+//                     <p className="text-gray-300 mt-2">{chef.specialty}</p>
+//                     <p className="text-gray-500 text-sm mt-2">
+//                       {chef.experience} years of experience
+//                     </p>
+//                   </div>
+//                 ))}
+//               </div>
+//               <button className="mt-8 bg-yellow-500 text-black py-2 px-6 rounded-lg hover:bg-yellow-600">
+//                 See More
+//               </button>
+//             </div>
+//           </div>
+// )
+  
+// }         </div>
+//  
+
 interface Chef {
   name: string;
   position: string;
@@ -139,7 +189,44 @@ interface Chef {
   available: boolean;
 }
 
-export default async function Chef(){
-  const Chefs:Chef[]=await sanityfetch({query: fetchChefs});
-  
+export default async function Chef() {
+  const Chefs: Chef[] = await sanityfetch({ query: fetchChefs });
+
+  // Limit the number of chefs displayed to 3
+  const displayedChefs = Chefs.slice(0, 3);
+
+  return (
+    <div>
+      <div className="bg-black text-white py-12">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">
+            <span className="text-yellow-500">Meet</span> Our Chef
+          </h2>
+          <div className="flex flex-wrap justify-center gap-6">
+            {displayedChefs.map((chef, index) => (
+              <div
+                key={index}
+                className="bg-gray-800 rounded-lg p-6 max-w-xs"
+              >
+                <img
+                  src={chef.imageUrl || 'path/to/default-image.jpg'}
+                  alt={chef.name}
+                  className="rounded-lg mb-4 w-full"
+                />
+                <h3 className="text-xl font-semibold mb-1">{chef.name}</h3>
+                <p className="text-gray-400">{chef.position}</p>
+                <p className="text-gray-300 mt-2">{chef.specialty}</p>
+                <p className="text-gray-500 text-sm mt-2">
+                  {chef.experience} years of experience
+                </p>
+              </div>
+            ))}
+          </div><Link href="\Chef">
+          <button className="mt-8 bg-yellow-500 text-black py-2 px-6 rounded-lg hover:bg-yellow-600">
+            See More
+          </button></Link>
+        </div>
+      </div>
+    </div>
+  );
 }

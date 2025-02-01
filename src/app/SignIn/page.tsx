@@ -1,9 +1,25 @@
 import Signin from "../components/Signin";
+import {
+    ClerkProvider,
+    SignInButton,
+    SignedIn,
+    SignedOut,
+    UserButton
+  } from '@clerk/nextjs'
 
 export default function SignIn(){
     return(
         <div>
-            <Signin/>
+        
+            <ClerkProvider>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+
+    </ClerkProvider>
         </div>
     )
 }

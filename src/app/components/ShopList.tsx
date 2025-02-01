@@ -313,6 +313,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Food {
   name: string;
@@ -380,109 +381,27 @@ export default function ShopList({ Foods }: ShopListProps) {
   }, [categories, priceRange, searchQuery]);
 
   return (
-//     <div className=" p-4 flex justify-around ">
-
-
-// <div className="flex flex-col items-center justify-center">
-// <div className="main-content flex gap-">
-//         {/* Product Grid Section */}
-//         <section className="product-grid grid grid-cols-3 gap-6 w-3/4">
-//           {filteredFoods.map((food, index) => (
-//             <div className="product-item border rounded p-4 shadow" key={index}>
-//               <img src={food.imageUrl} alt={food.name} className="h-[100%] w-[100%]" />
-//               <h4 className="font-bold text-lg">{food.name}</h4>
-//               <p className="text-sm">
-//                 {food.price} <span className="line-through text-gray-500">{food.originalPrice}</span>
-//               </p>
-//             </div>
-//           ))}
-//         </section>
-//          {/* Pagination */}
-
-// </div>
-// <div className="pagination flex justify-center items-center mt-14 space-x-2 ">
-//      <button className="px-3 py-1 bg-gray-200 rounded">◀</button>
-//      <button className="px-3 py-1 bg-yellow-500 text-white rounded">1</button>
-//      <button className="px-3 py-1 bg-gray-200 rounded">2</button>
-//      <button className="px-3 py-1 bg-gray-200 rounded">3</button>
-//      <button className="px-3 py-1 bg-gray-200 rounded">▶</button>
-//    </div>
-// </div>
-
-//         {/* Sidebar Section */}
-//         <aside className="sidebar w-1/4 space-y-6">
-//         <div className="header-controls flex justify-between items-center mb-6">
-//         <div className="search flex items-center gap-2">
-//           <input
-//             type="text"
-//             placeholder="Search Product"
-//             className="border border-gray-300 rounded p-2 text-sm w-48"
-//             onChange={handleSearchChange}
-//           />
-//           <button className="bg-yellow-500 text-white rounded px-4 py-2">
-//             🔍
-//           </button>
-//         </div>
-//       </div>
-//           {/* Category Filter */}
-//           <div className="category-filter">
-//             <h3 className="font-bold text-lg mb-2">Category</h3>
-//             <ul className="space-y-1">
-//               {["Sandwiches", "Burger", "Chicken Chop", "Drinks", "Pizza", "Non Veg"].map(
-//                 (category) => (
-//                   <li key={category}>
-//                     <label className="flex items-center gap-2">
-//                       <input
-//                         type="checkbox"
-//                         className="form-checkbox"
-//                         onChange={() => handleCategoryChange(category)}
-//                       />
-//                       {category}
-//                     </label>
-//                   </li>
-//                 )
-//               )}
-//             </ul>
-//           </div>
-
-//           {/* Price Filter */}
-//           <div className="price-filter">
-//             <h3 className="font-bold text-lg mb-2">Filter By Price</h3>
-//             <input
-//               type="range"
-//               min="0"
-//               max="500"
-//               className="w-full"
-//               value={priceRange}
-//               onChange={handlePriceChange}
-//             />
-//             <p>Max Price: ${priceRange}</p>
-//           </div>
-
-//           {/* Latest Products */}
-//           <div className="latest-products">
-//             <h3 className="font-bold text-lg mb-2">Latest Products</h3>
-//             <ul className="space-y-1">
-//               {Foods.slice(-3).map((food, index) => (
-//                 <li key={index} className="text-sm">{food.name}</li>
-//               ))}
-//             </ul>
-//           </div>
-          
-//         </aside>
-//       </div>
 
 <div className="product-page p-4 flex">
   <div className="main-content flex-grow">
     <section className="product-grid grid grid-cols-3 gap-6">
       {filteredFoods.map((food, index) => (
-        <div className="product-item border rounded p-4 shadow" key={index}>
-          <img src={food.imageUrl} alt={food.name} className="h-[100%] w-[100%]" />
-          <h4 className="font-bold text-lg">{food.name}</h4>
-          <p className="text-sm">
-            {food.price} <span className="line-through text-gray-500">{food.originalPrice}</span>
-          </p>
-        </div>
+          <Link href={`/${encodeURIComponent(food.name)}`} key={index}>
+            <div className="product-item border rounded p-4 shadow">
+              <img
+                src={food.imageUrl}
+                alt={food.name}
+                className="h-[100%] w-[100%]"
+              />
+              <h4 className="font-bold text-lg">{food.name}</h4>
+              <p className="text-sm">
+                ${food.price}{" "}
+                <span className="line-through text-gray-500">
+                  ${food.originalPrice}
+                </span>
+              </p>
+            </div>
+          </Link>
       ))}
     </section>
     {/* Pagination */}

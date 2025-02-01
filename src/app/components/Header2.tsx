@@ -307,6 +307,7 @@
 
 "use client";
 import Link from "next/link";
+import Image from "next/image"; // Import the Image component
 import { useState } from "react";
 import { useCart } from "../context/CartContext"; // Ensure this path is correct
 
@@ -326,7 +327,13 @@ export default function Header2() {
       <div className="flex justify-between items-center w-11/12 lg:w-10/12 mx-auto text-white py-4">
         {/* Logo */}
         <div className="flex justify-center">
-          <img src="/Foodtuck (1).png" alt="Logo" className="w-[120px] h-auto" />
+          <Image
+            src="/Foodtuck (1).png"
+            alt="Logo"
+            width={120}
+            height={40} // Adjust height as needed
+            className="w-[120px] h-auto"
+          />
         </div>
 
         {/* Navigation Menu (Desktop) */}
@@ -350,24 +357,30 @@ export default function Header2() {
 
         {/* Search and Icons */}
         <div className="flex items-center gap-4">
-          <img
-            src="MagnifyingGlass.png"
+          <Image
+            src="/MagnifyingGlass.png"
             alt="Search"
-            className="w-[24px] h-[24px] cursor-pointer"
+            width={24}
+            height={24}
+            className="cursor-pointer"
           />
           <Link href="/SignIn">
-            <img
-              src="User.png"
+            <Image
+              src="/User.png"
               alt="User"
-              className="w-[24px] h-[24px] cursor-pointer"
+              width={24}
+              height={24}
+              className="cursor-pointer"
             />
           </Link>
           <Link href="/ShoppingCart">
             <div className="relative">
-              <img
-                src="Tote.png"
+              <Image
+                src="/Tote.png"
                 alt="Cart"
-                className="w-[24px] h-[24px] cursor-pointer"
+                width={24}
+                height={24}
+                className="cursor-pointer"
               />
               {totalItems > 0 && (
                 <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">

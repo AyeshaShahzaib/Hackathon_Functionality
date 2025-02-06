@@ -338,7 +338,7 @@ export default function Header2() {
 
         {/* Navigation Menu (Desktop) */}
         <div className="hidden md:flex gap-6">
-          <Link href="/Home">
+          <Link href="/">
             <h1 className="cursor-pointer hover:text-[#FF9F0D]">Home</h1>
           </Link>
           <Link href="/Menu">

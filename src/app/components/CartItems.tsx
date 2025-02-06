@@ -301,8 +301,89 @@
 //     rating: 4,
 //   },
 // ];
+// "use client";
+// import { useCart } from "../context/CartContext";
+
+// export default function CartItems() {
+//   const { cart, updateQuantity, removeFromCart } = useCart();
+
+//   return (
+//     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+//       {cart.length === 0 ? (
+//         <p className="text-center text-lg">Your cart is empty.</p>
+//       ) : (
+//         <div className="overflow-x-auto">
+//           <table className="table-auto w-full border-collapse border border-gray-200">
+//             <thead>
+//               <tr>
+//                 <th className="px-4 py-2 text-left">Product</th>
+//                 <th className="px-4 py-2 text-left">Price</th>
+//                 <th className="px-4 py-2 text-left">Quantity</th>
+//                 <th className="px-4 py-2 text-left">Total</th>
+//                 <th className="px-4 py-2 text-left">Remove</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {cart.map((product) => (
+//                 <tr key={product.id} className="border-b border-gray-200">
+//                   <td className="px-4 py-4 flex items-center">
+//                     <img
+//                       src={product.imageUrl}
+//                       alt={product.name}
+//                       className="w-16 h-16 object-cover rounded-md mr-4"
+//                     />
+//                     <p>{product.name}</p>
+//                   </td>
+//                   <td className="px-4 py-4">${product.price.toFixed(2)}</td>
+//                   <td className="px-4 py-4">
+//                     <div className="flex items-center border border-gray-300 rounded">
+//                       <button
+//                         onClick={() =>
+//                           updateQuantity(product.id, product.quantity - 1)
+//                         }
+//                         className="px-2"
+//                       >
+//                         -
+//                       </button>
+//                       <input
+//                         type="text"
+//                         value={product.quantity}
+//                         readOnly
+//                         className="w-8 text-center border-none focus:outline-none"
+//                       />
+//                       <button
+//                         onClick={() =>
+//                           updateQuantity(product.id, product.quantity + 1)
+//                         }
+//                         className="px-2"
+//                       >
+//                         +
+//                       </button>
+//                     </div>
+//                   </td>
+//                   <td className="px-4 py-4">
+//                     ${(product.price * product.quantity).toFixed(2)}
+//                   </td>
+//                   <td
+//                     onClick={() => removeFromCart(product.id)}
+//                     className="px-4 py-4 text-red-500 cursor-pointer"
+//                   >
+//                     Remove
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
 "use client";
 import { useCart } from "../context/CartContext";
+import Image from "next/image";
 
 export default function CartItems() {
   const { cart, updateQuantity, removeFromCart } = useCart();
@@ -310,12 +391,12 @@ export default function CartItems() {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       {cart.length === 0 ? (
-        <p className="text-center text-lg">Your cart is empty.</p>
+        <p className="text-center text-lg font-semibold">Your cart is empty.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="table-auto w-full border-collapse border border-gray-200">
             <thead>
-              <tr>
+              <tr className="bg-gray-100">
                 <th className="px-4 py-2 text-left">Product</th>
                 <th className="px-4 py-2 text-left">Price</th>
                 <th className="px-4 py-2 text-left">Quantity</th>
@@ -327,35 +408,40 @@ export default function CartItems() {
               {cart.map((product) => (
                 <tr key={product.id} className="border-b border-gray-200">
                   <td className="px-4 py-4 flex items-center">
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-16 h-16 object-cover rounded-md mr-4"
-                    />
-                    <p>{product.name}</p>
+                    <div className="w-16 h-16 relative mr-4">
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-md"
+                        priority
+                      />
+                    </div>
+                    <p className="font-medium">{product.name}</p>
                   </td>
                   <td className="px-4 py-4">${product.price.toFixed(2)}</td>
                   <td className="px-4 py-4">
-                    <div className="flex items-center border border-gray-300 rounded">
+                    <div className="flex items-center border border-gray-300 rounded w-24">
                       <button
                         onClick={() =>
-                          updateQuantity(product.id, product.quantity - 1)
+                          updateQuantity(product.id, Math.max(product.quantity - 1, 1))
                         }
-                        className="px-2"
+                        className="px-2 py-1 bg-gray-200 rounded-l-md hover:bg-gray-300"
                       >
-                        -
+                        −
                       </button>
                       <input
                         type="text"
                         value={product.quantity}
                         readOnly
-                        className="w-8 text-center border-none focus:outline-none"
+                        className="w-10 text-center bg-white border-none"
                       />
                       <button
                         onClick={() =>
                           updateQuantity(product.id, product.quantity + 1)
                         }
-                        className="px-2"
+                        className="px-2 py-1 bg-gray-200 rounded-r-md hover:bg-gray-300"
                       >
                         +
                       </button>
@@ -364,11 +450,13 @@ export default function CartItems() {
                   <td className="px-4 py-4">
                     ${(product.price * product.quantity).toFixed(2)}
                   </td>
-                  <td
-                    onClick={() => removeFromCart(product.id)}
-                    className="px-4 py-4 text-red-500 cursor-pointer"
-                  >
-                    Remove
+                  <td className="px-4 py-4">
+                    <button
+                      onClick={() => removeFromCart(product.id)}
+                      className="text-red-500 font-semibold hover:underline"
+                    >
+                      Remove
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -379,3 +467,4 @@ export default function CartItems() {
     </div>
   );
 }
+

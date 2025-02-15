@@ -479,14 +479,16 @@ export async function generateStaticParams(): Promise<{ name: string }[]> {
 
 // ✅ Corrected params type
 type PageProps = {
-  params: { name: string }; // params is a plain object
+  params: Promise<{ name: string }>;
 };
 
 export default async function FoodDetailPage({ params }: PageProps) {
-  // Decode the name from the URL
-  const decodedName = decodeURIComponent(params.name);
+  if (!(await params)?.name) {
+    return <p>Error: Invalid parameters.</p>;
+  }
 
-  // Fetch the food details from Sanity
+  const decodedName = decodeURIComponent((await params).name);
+
   const food = await sanityfetch({
     query: `
       *[_type == "food" && name == $name][0] {
@@ -504,60 +506,11 @@ export default async function FoodDetailPage({ params }: PageProps) {
     params: { name: decodedName },
   });
 
-  // Handle case where food is not found
   if (!food) {
     return <p>Food not found. Please check the name and try again.</p>;
   }
 
-  // Render the FoodDetail component with the fetched data
   return <FoodDetail food={food} />;
 }
 
-// import { sanityfetch } from "@/sanity/lib/fetch";
-// import FoodDetail from "../components/FoodDetail";
 
-// // ✅ Correct return type for generateStaticParams()
-// export async function generateStaticParams(): Promise<Array<{ name: string }>>  {
-//   const foodNames = await sanityfetch({
-//     query: `*[_type == "food"] { name }`,
-//   });
-
-//   return foodNames.map((food: { name: string }) => ({
-//     name: food.name.toString(),
-//   }));
-// }
-
-// // ✅ Corrected params type (NO Promise)
-// type PageProps = {
-//   params: { name: string }; // ✅ Correct type
-// };
-// export default async function FoodDetailPage({ params }: PageProps) {
-//   if (!params?.name) { // ✅ No need to await params
-//     return <p>Error: Invalid parameters.</p>;
-//   }
-
-//   const decodedName = decodeURIComponent(params.name);
-
-//   const food = await sanityfetch({
-//     query: `
-//       *[_type == "food" && name == $name][0] {
-//         _id,
-//         name,
-//         category,
-//         price,
-//         originalPrice,
-//         "imageUrl": image.asset->url,
-//         description,
-//         available,
-//         tags
-//       }
-//     `,
-//     params: { name: decodedName },
-//   });
-
-//   if (!food) {
-//     return <p>Food not found. Please check the name and try again.</p>;
-//   }
-
-//   return <FoodDetail food={food} />;
-// }

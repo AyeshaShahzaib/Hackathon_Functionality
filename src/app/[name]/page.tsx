@@ -464,7 +464,19 @@
 // }
 
 import { sanityfetch } from "@/sanity/lib/fetch";
-import FoodDetail from "../components/FoodDetail"; // Client component
+import FoodDetail from "../components/FoodDetail";
+
+interface Food {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  tags?: string[];
+  imageUrl: string;
+  description: string;
+  available: boolean;
+}
 
 interface PageProps {
   params: {
@@ -473,23 +485,27 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const foodNames = await sanityfetch({
+  const foodNames: { name: string }[] = await sanityfetch({
     query: `
       *[_type == "food"] {
-        name
+        "name": name
       }
     `,
   });
 
-  return foodNames.map((food: { name: string }) => ({
-    name: food.name,
+  return foodNames.map((food) => ({
+    name: encodeURIComponent(food.name), // Ensure valid URL encoding
   }));
 }
 
 export default async function FoodDetailPage({ params }: PageProps) {
+  if (!params || !params.name) {
+    return <p>Error: Invalid URL parameter.</p>;
+  }
+
   const decodedName = decodeURIComponent(params.name);
 
-  const food = await sanityfetch({
+  const food: Food | null = await sanityfetch({
     query: `
       *[_type == "food" && name == $name][0] {
         _id,

@@ -464,13 +464,19 @@
 // }
 
 import { sanityfetch } from "@/sanity/lib/fetch";
-import FoodDetail from "../components/FoodDetail";
+import FoodDetail from "@/components/FoodDetail";
 
+// Define TypeScript interface for PageProps
+interface PageProps {
+  params: { name: string };
+}
+
+// Function to generate static paths for dynamic routes
 export async function generateStaticParams() {
   const foodNames = await sanityfetch({
     query: `
       *[_type == "food"] {
-        name
+        "name": slug.current
       }
     `,
   });
@@ -480,12 +486,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function FoodDetailPage({
-  params,
-}: {
-  params: { name: string };
-}) {
-  if (!params || !params.name) {
+// Async function to fetch and display food details
+export default async function FoodDetailPage({ params }: PageProps) {
+  if (!params?.name) {
     return <p>Error: Invalid parameters.</p>;
   }
 
@@ -493,7 +496,7 @@ export default async function FoodDetailPage({
 
   const food = await sanityfetch({
     query: `
-      *[_type == "food" && name == $name][0] {
+      *[_type == "food" && slug.current == $name][0] {
         _id,
         name,
         category,

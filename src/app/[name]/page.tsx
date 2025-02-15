@@ -527,14 +527,13 @@ export async function generateStaticParams(): Promise<Array<{ name: string }>> {
 }
 
 // ✅ Corrected params type (params is an object, NOT a Promise)
-type PageProps = {
-  params: { name: string };
-};
+interface PageProps {
+  params: Promise<{ name: string }>;
+}
 
-export default async function FoodDetailPage({ params }: PageProps) {
-  if (!params?.name) {
-    return <p>Error: Invalid parameters.</p>;
-  }
+export default function Page({ params }: { params: { name: string } }) {
+  return <div>Page for {params.name}</div>;
+}
 
   const decodedName = decodeURIComponent(params.name); // ✅ No await needed
 

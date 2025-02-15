@@ -515,8 +515,8 @@
 import { sanityfetch } from "@/sanity/lib/fetch";
 import FoodDetail from "../components/FoodDetail";
 
-// ✅ Correct return type for generateStaticParams()
-export async function generateStaticParams(): Promise<Array<{ name: string }>>  {
+// ✅ Corrected return type for generateStaticParams()
+export async function generateStaticParams(): Promise<Array<{ name: string }>> {
   const foodNames = await sanityfetch({
     query: `*[_type == "food"] { name }`,
   });
@@ -526,16 +526,17 @@ export async function generateStaticParams(): Promise<Array<{ name: string }>>  
   }));
 }
 
-// ✅ Corrected params type (NO Promise)
+// ✅ Corrected params type (params is an object, NOT a Promise)
 type PageProps = {
-  params: { name: string }; // ✅ Correct type
+  params: { name: string };
 };
+
 export default async function FoodDetailPage({ params }: PageProps) {
-  if (!params?.name) { // ✅ No need to await params
+  if (!params?.name) {
     return <p>Error: Invalid parameters.</p>;
   }
 
-  const decodedName = decodeURIComponent(params.name);
+  const decodedName = decodeURIComponent(params.name); // ✅ No await needed
 
   const food = await sanityfetch({
     query: `

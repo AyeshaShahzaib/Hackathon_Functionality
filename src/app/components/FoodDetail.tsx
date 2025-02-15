@@ -1,3 +1,4 @@
+// components/FoodDetail.tsx (Client Component)
 "use client";
 
 import { useCart } from "../context/CartContext";

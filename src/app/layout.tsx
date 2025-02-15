@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Header2 from "./components/Header2";
 import Footer from "./components/Footer";
 import "./globals.css";
-import { ClerkProvider } from '@clerk/nextjs';
+
 import { CartProvider } from "./context/CartContext";
 
 export const metadata: Metadata = {
@@ -19,11 +19,10 @@ export default function RootLayout({
     <html lang="en">
       <body
       ><CartProvider>
-        <ClerkProvider>
+      
         <Header2></Header2>
         {children}
 <Footer></Footer>
-</ClerkProvider>
 </CartProvider>
       </body>
     </html>

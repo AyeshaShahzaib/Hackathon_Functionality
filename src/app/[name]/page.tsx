@@ -466,28 +466,28 @@
 import { sanityfetch } from "@/sanity/lib/fetch";
 import FoodDetail from "../components/FoodDetail";
 
-// ✅ Update generateStaticParams()
+// ✅ Corrected return type for generateStaticParams()
 export async function generateStaticParams(): Promise<{ name: string }[]> {
   const foodNames = await sanityfetch({
     query: `*[_type == "food"] { name }`,
   });
 
   return foodNames.map((food: { name: string }) => ({
-    name: food.name.toString(), // Ensure it's a string
+    name: food.name.toString(),
   }));
 }
 
-export default async function FoodDetailPage({
-  params,
-}: {
-  params: { name: string } | Promise<{ name: string }>;
-}) {
-  const resolvedParams = await Promise.resolve(params); // Ensure it's resolved
-  if (!resolvedParams || !resolvedParams.name) {
+// ✅ Corrected params type
+type PageProps = {
+  params: Promise<{ name: string }>;
+};
+
+export default async function FoodDetailPage({ params }: PageProps) {
+  if (!(await params)?.name) {
     return <p>Error: Invalid parameters.</p>;
   }
 
-  const decodedName = decodeURIComponent(resolvedParams.name);
+  const decodedName = decodeURIComponent((await params).name);
 
   const food = await sanityfetch({
     query: `

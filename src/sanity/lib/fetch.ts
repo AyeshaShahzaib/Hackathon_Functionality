@@ -14,7 +14,7 @@
 import { createClient } from "next-sanity";
 
 const client = createClient({
-  projectId: "your_project_id",
+  projectId: "nkczw42v",
   dataset: "production",
   apiVersion: "2023-01-01",
   useCdn: false, // Set to `true` for faster but potentially stale data

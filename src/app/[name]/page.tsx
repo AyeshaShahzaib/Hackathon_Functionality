@@ -479,7 +479,7 @@ export async function generateStaticParams(): Promise<{ name: string }[]> {
 
 // ✅ Corrected params type
 type PageProps = {
-  params: { name: string }; // params should be a plain object, not a Promise
+  params: { name: string }; // params is a plain object
 };
 
 export default async function FoodDetailPage({ params }: PageProps) {
@@ -512,6 +512,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
   // Render the FoodDetail component with the fetched data
   return <FoodDetail food={food} />;
 }
+
 // import { sanityfetch } from "@/sanity/lib/fetch";
 // import FoodDetail from "../components/FoodDetail";
 

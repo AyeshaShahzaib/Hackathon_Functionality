@@ -464,7 +464,7 @@
 // }
 
 import { sanityfetch } from "@/sanity/lib/fetch";
-import FoodDetail from "@/components/FoodDetail";
+import FoodDetail from "../components/FoodDetail";
 
 // Define TypeScript interface for PageProps
 interface PageProps {

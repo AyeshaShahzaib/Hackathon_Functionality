@@ -530,7 +530,6 @@ export async function generateStaticParams(): Promise<{ name: string }[]> {
 type PageProps = {
   params: { name: string };
 };
-
 export default async function FoodDetailPage({ params }: PageProps) {
   if (!params?.name) {
     return <p>Error: Invalid parameters.</p>;

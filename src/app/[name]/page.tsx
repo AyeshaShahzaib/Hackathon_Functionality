@@ -528,10 +528,10 @@ export async function generateStaticParams(): Promise<{ name: string }[]> {
 
 // ✅ Corrected params type (NO Promise)
 type PageProps = {
-  params: { name: string };
+  params: { name: string }; // ✅ Correct type
 };
 export default async function FoodDetailPage({ params }: PageProps) {
-  if (!params?.name) {
+  if (!params?.name) { // ✅ No need to await params
     return <p>Error: Invalid parameters.</p>;
   }
 

@@ -463,10 +463,59 @@
 //   );
 // }
 
+// import { sanityfetch } from "@/sanity/lib/fetch";
+// import FoodDetail from "../components/FoodDetail";
+
+// // ✅ Corrected return type for generateStaticParams()
+// export async function generateStaticParams(): Promise<{ name: string }[]> {
+//   const foodNames = await sanityfetch({
+//     query: `*[_type == "food"] { name }`,
+//   });
+
+//   return foodNames.map((food: { name: string }) => ({
+//     name: food.name.toString(),
+//   }));
+// }
+
+// // ✅ Corrected params type
+// type PageProps = {
+//   params: Promise<{ name: string }>;
+// };
+
+// export default async function FoodDetailPage({ params }: PageProps) {
+//   if (!(await params)?.name) {
+//     return <p>Error: Invalid parameters.</p>;
+//   }
+
+//   const decodedName = decodeURIComponent((await params).name);
+
+//   const food = await sanityfetch({
+//     query: `
+//       *[_type == "food" && name == $name][0] {
+//         _id,
+//         name,
+//         category,
+//         price,
+//         originalPrice,
+//         "imageUrl": image.asset->url,
+//         description,
+//         available,
+//         tags
+//       }
+//     `,
+//     params: { name: decodedName },
+//   });
+
+//   if (!food) {
+//     return <p>Food not found. Please check the name and try again.</p>;
+//   }
+
+//   return <FoodDetail food={food} />;
+// }
 import { sanityfetch } from "@/sanity/lib/fetch";
 import FoodDetail from "../components/FoodDetail";
 
-// ✅ Corrected return type for generateStaticParams()
+// ✅ Correct return type for generateStaticParams()
 export async function generateStaticParams(): Promise<{ name: string }[]> {
   const foodNames = await sanityfetch({
     query: `*[_type == "food"] { name }`,
@@ -477,17 +526,17 @@ export async function generateStaticParams(): Promise<{ name: string }[]> {
   }));
 }
 
-// ✅ Corrected params type
+// ✅ Corrected params type (NO Promise)
 type PageProps = {
-  params: Promise<{ name: string }>;
+  params: { name: string };
 };
 
 export default async function FoodDetailPage({ params }: PageProps) {
-  if (!(await params)?.name) {
+  if (!params?.name) {
     return <p>Error: Invalid parameters.</p>;
   }
 
-  const decodedName = decodeURIComponent((await params).name);
+  const decodedName = decodeURIComponent(params.name);
 
   const food = await sanityfetch({
     query: `

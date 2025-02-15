@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Ensure this is set to Windows
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +33,6 @@ jobs:
             Write-Host "Unable to determine package manager"
             exit 1
           }
-
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -56,9 +55,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
 
       - name: Install dependencies
-          run: npm install
+        run: npm install --ignore-scripts  # Ensure this step is correctly indented
 
-      # ✅ Set Clerk environment variable
       - name: Set up environment variables
         run: echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}" >> $GITHUB_ENV
 

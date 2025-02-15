@@ -495,7 +495,7 @@ export async function generateStaticParams() {
 export default async function FoodDetailPage({
   params,
 }: {
-  params: { name: string };
+  params: { name: string }; // Correctly type `params` as an object
 }) {
   const decodedName = decodeURIComponent(params.name);
 

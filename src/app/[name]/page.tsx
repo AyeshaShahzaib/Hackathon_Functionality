@@ -516,7 +516,7 @@ import { sanityfetch } from "@/sanity/lib/fetch";
 import FoodDetail from "../components/FoodDetail";
 
 // ✅ Correct return type for generateStaticParams()
-export async function generateStaticParams(): Promise<{ name: string }[]> {
+export async function generateStaticParams() {
   const foodNames = await sanityfetch({
     query: `*[_type == "food"] { name }`,
   });

@@ -463,12 +463,8 @@
 //   );
 // }
 
-"use client";
-
-import { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext";
 import { sanityfetch } from "@/sanity/lib/fetch";
-import Image from "next/image";
+import FoodDetail from "../components/FoodDetail"; // Your client component
 
 interface Food {
   id: string;
@@ -480,10 +476,6 @@ interface Food {
   imageUrl: string;
   description: string;
   available: boolean;
-}
-
-interface FoodDetailProps {
-  params: { name: string }; // params is NOT a Promise
 }
 
 export async function generateStaticParams() {
@@ -500,121 +492,33 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function FoodDetail({ params }: FoodDetailProps) {
-  const { addToCart } = useCart();
-  const [food, setFood] = useState<Food | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [decodedName, setDecodedName] = useState<string | null>(null);
+export default async function FoodDetailPage({
+  params,
+}: {
+  params: { name: string };
+}) {
+  const decodedName = decodeURIComponent(params.name);
 
-  useEffect(() => {
-    if (!params.name) return;
-
-    const name = decodeURIComponent(params.name);
-    setDecodedName(name);
-  }, [params.name]);
-
-  useEffect(() => {
-    if (!decodedName) return;
-
-    async function fetchFood() {
-      try {
-        const fetchedFood = await sanityfetch({
-          query: `
-            *[_type == "food" && name == $name][0] {
-              _id,
-              name,
-              category,
-              price,
-              originalPrice,
-              "imageUrl": image.asset->url,
-              description,
-              available,
-              tags
-            }
-          `,
-          params: { name: decodedName },
-        });
-        setFood(fetchedFood);
-      } catch (error) {
-        console.error("Error fetching food:", error);
-        setFood(null);
-      } finally {
-        setLoading(false);
+  const food = await sanityfetch({
+    query: `
+      *[_type == "food" && name == $name][0] {
+        _id,
+        name,
+        category,
+        price,
+        originalPrice,
+        "imageUrl": image.asset->url,
+        description,
+        available,
+        tags
       }
-    }
-
-    fetchFood();
-  }, [decodedName]);
-
-  const handleAddToCart = () => {
-    if (food) {
-      addToCart({
-        id: food.id,
-        name: food.name,
-        price: food.price,
-        imageUrl: food.imageUrl,
-        quantity: 1,
-      });
-    }
-  };
-
-  if (loading || !decodedName) {
-    return <p>Loading...</p>;
-  }
+    `,
+    params: { name: decodedName },
+  });
 
   if (!food) {
     return <p>Food not found. Please check the name and try again.</p>;
   }
 
-  return (
-    <div className="food-detail-container p-4">
-      <div className="flex">
-        <Image
-          src={food.imageUrl}
-          alt={food.name}
-          width={500}
-          height={300}
-          className="w-1/2 rounded"
-        />
-        <div className="ml-6">
-          <h1 className="text-3xl font-bold">{food.name}</h1>
-          <p className="text-lg text-gray-600 mt-2">{food.description}</p>
-          <p className="text-lg mt-4">
-            <strong>Price:</strong> ${food.price}{" "}
-            {food.originalPrice > food.price && (
-              <span className="line-through text-gray-500">
-                ${food.originalPrice}
-              </span>
-            )}
-          </p>
-          <p className="mt-2">
-            <strong>Category:</strong> {food.category}
-          </p>
-          {food.tags && food.tags.length > 0 ? (
-            <p className="mt-2">
-              <strong>Tags:</strong> {food.tags.join(", ")}
-            </p>
-          ) : (
-            <p className="mt-2 text-gray-500">No tags available</p>
-          )}
-          <p className="mt-2">
-            <strong>Availability:</strong>{" "}
-            {food.available ? (
-              <span className="text-green-500">In Stock</span>
-            ) : (
-              <span className="text-red-500">Out of Stock</span>
-            )}
-          </p>
-          {food.available && (
-            <button
-              onClick={handleAddToCart}
-              className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
-            >
-              Add to Cart
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <FoodDetail food={food} />;
 }

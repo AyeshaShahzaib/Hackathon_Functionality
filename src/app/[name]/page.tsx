@@ -464,18 +464,12 @@
 // }
 
 import { sanityfetch } from "@/sanity/lib/fetch";
-import FoodDetail from "../components/FoodDetail"; // Your client component
+import FoodDetail from "../components/FoodDetail"; // Client component
 
-interface Food {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  originalPrice: number;
-  tags?: string[];
-  imageUrl: string;
-  description: string;
-  available: boolean;
+interface PageProps {
+  params: {
+    name: string;
+  };
 }
 
 export async function generateStaticParams() {
@@ -492,11 +486,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function FoodDetailPage({
-  params,
-}: {
-  params: { name: string }; // Correctly type `params` as an object
-}) {
+export default async function FoodDetailPage({ params }: PageProps) {
   const decodedName = decodeURIComponent(params.name);
 
   const food = await sanityfetch({

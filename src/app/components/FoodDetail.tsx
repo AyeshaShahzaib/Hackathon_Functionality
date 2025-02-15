@@ -17,7 +17,7 @@ interface Food {
 }
 
 interface FoodDetailProps {
-  food: Food; // Food data passed from the server component
+  food: Food;
 }
 
 export default function FoodDetail({ food }: FoodDetailProps) {

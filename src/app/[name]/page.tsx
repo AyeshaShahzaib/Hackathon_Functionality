@@ -463,11 +463,60 @@
 //   );
 // }
 
+import { sanityfetch } from "@/sanity/lib/fetch";
+import FoodDetail from "../components/FoodDetail";
+
+// ✅ Corrected return type for generateStaticParams()
+export async function generateStaticParams(): Promise<{ name: string }[]> {
+  const foodNames = await sanityfetch({
+    query: `*[_type == "food"] { name }`,
+  });
+
+  return foodNames.map((food: { name: string }) => ({
+    name: food.name.toString(),
+  }));
+}
+
+// ✅ Corrected params type
+type PageProps = {
+  params: { name: string }; // params should be a plain object, not a Promise
+};
+
+export default async function FoodDetailPage({ params }: PageProps) {
+  // Decode the name from the URL
+  const decodedName = decodeURIComponent(params.name);
+
+  // Fetch the food details from Sanity
+  const food = await sanityfetch({
+    query: `
+      *[_type == "food" && name == $name][0] {
+        _id,
+        name,
+        category,
+        price,
+        originalPrice,
+        "imageUrl": image.asset->url,
+        description,
+        available,
+        tags
+      }
+    `,
+    params: { name: decodedName },
+  });
+
+  // Handle case where food is not found
+  if (!food) {
+    return <p>Food not found. Please check the name and try again.</p>;
+  }
+
+  // Render the FoodDetail component with the fetched data
+  return <FoodDetail food={food} />;
+}
 // import { sanityfetch } from "@/sanity/lib/fetch";
 // import FoodDetail from "../components/FoodDetail";
 
-// // ✅ Corrected return type for generateStaticParams()
-// export async function generateStaticParams(): Promise<{ name: string }[]> {
+// // ✅ Correct return type for generateStaticParams()
+// export async function generateStaticParams(): Promise<Array<{ name: string }>>  {
 //   const foodNames = await sanityfetch({
 //     query: `*[_type == "food"] { name }`,
 //   });
@@ -477,17 +526,16 @@
 //   }));
 // }
 
-// // ✅ Corrected params type
+// // ✅ Corrected params type (NO Promise)
 // type PageProps = {
-//   params: Promise<{ name: string }>;
+//   params: { name: string }; // ✅ Correct type
 // };
-
 // export default async function FoodDetailPage({ params }: PageProps) {
-//   if (!(await params)?.name) {
+//   if (!params?.name) { // ✅ No need to await params
 //     return <p>Error: Invalid parameters.</p>;
 //   }
 
-//   const decodedName = decodeURIComponent((await params).name);
+//   const decodedName = decodeURIComponent(params.name);
 
 //   const food = await sanityfetch({
 //     query: `
@@ -512,51 +560,3 @@
 
 //   return <FoodDetail food={food} />;
 // }
-import { sanityfetch } from "@/sanity/lib/fetch";
-import FoodDetail from "../components/FoodDetail";
-
-// ✅ Corrected return type for generateStaticParams()
-export async function generateStaticParams(): Promise<Array<{ name: string }>> {
-  const foodNames = await sanityfetch({
-    query: `*[_type == "food"] { name }`,
-  });
-
-  return foodNames.map((food: { name: string }) => ({
-    name: food.name.toString(),
-  }));
-}
-
-// ✅ Corrected params type (params is an object, NOT a Promise)
-interface PageProps {
-  params: Promise<{ name: string }>;
-}
-
-export default function Page({ params }: { params: { name: string } }) {
-  return <div>Page for {params.name}</div>;
-}
-
-  const decodedName = decodeURIComponent(params.name); // ✅ No await needed
-
-  const food = await sanityfetch({
-    query: `
-      *[_type == "food" && name == $name][0] {
-        _id,
-        name,
-        category,
-        price,
-        originalPrice,
-        "imageUrl": image.asset->url,
-        description,
-        available,
-        tags
-      }
-    `,
-    params: { name: decodedName },
-  });
-
-  if (!food) {
-    return <p>Food not found. Please check the name and try again.</p>;
-  }
-
-  return <FoodDetail food={food} />;
-}

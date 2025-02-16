@@ -1,6 +1,6 @@
 {
-    "version": 2,
-    "routes": [
-      { "src": "/api/foods", "dest": "/api/foods" }
-    ]
+  "functions": {
+    "api/foods": { "runtime": "nodejs18.x" },
+    "api/chefs": { "runtime": "nodejs18.x" }
   }
+}

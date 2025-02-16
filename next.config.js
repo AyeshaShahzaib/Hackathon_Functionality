@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static export
+  output: 'standalone', // Ensure standalone deployment
+
+
+
   images: {
     remotePatterns: [
       {

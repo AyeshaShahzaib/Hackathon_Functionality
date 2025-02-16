@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "import-data": "node src/scripts/import-data.mjs",
-    "export": "next export"
+    "export": "next export",
+      "vercel-build": "next build"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.1",
